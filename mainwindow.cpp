@@ -28,29 +28,55 @@ void MainWindow::changeEvent(QEvent *e)
 
 void MainWindow::on_submit_clicked()
 {
-    int i = 0 , flag = 0;
+    int i , flag = 0 ,cur_pos = 0;
+    QString stringToEncode = ui->stringToEncode->text();
+    if(stringToEncode.isNull())
+        return;
+
     QFile *file = new QFile("DB");
     QTextCodec *hindi = QTextCodec::codecForName("UTF-8");
     file->open(QIODevice::ReadWrite);
 
-    QString searchString = ui->inputData->text().toUtf8();
-
-    while(++i)      //Not that it is infinite loop
+    QStringList searchStringList = ui->inputData->toPlainText().split(" ",QString::SkipEmptyParts);
+    foreach (QString searchString,searchStringList )
     {
-        QString fileString = file->readLine();
-        if(fileString.isEmpty())
-            break;
-        fileString.chop(2);
-        qDebug()<<fileString<<"   "<<searchString;
+        qDebug()<<"1";
+        file->seek(0);
+        //If Cover Text is bigger than what is needed
+        if(cur_pos >= stringToEncode.size())
+            return;
 
-        if(fileString == searchString)
+        i=0 , flag=0;
+        while(++i)      //Note that it is infinite loop
         {
-            qDebug()<<"true";
-            flag = 1;
-            QMessageBox::information(this,tr("Results").toUtf8(),tr("Found at %1").arg(i));
-            break;
+
+            QString fileString = file->readLine();
+            if(fileString.isEmpty())
+                break;
+            fileString.chop(2);
+            QStringList sandhiViched = fileString.split(" ",QString::SkipEmptyParts);
+            //qDebug()<<sandhiViched.at(0)<<"   "<<searchString.toUtf8();
+
+            if(sandhiViched.at(0) == searchString.toUtf8())
+            {
+                //Word is composite and present in database
+                qDebug()<<"true"<<i;
+
+                if(stringToEncode[cur_pos++] == '1')
+                {
+                    for(int i=1 ; i<sandhiViched.size() ; i++)
+                        ui->outputData->insertPlainText(hindi->toUnicode(sandhiViched.at(i).toAscii())+" ");
+                    //We have outputted the viched of composite word so flag this word
+                    flag = 1;
+                    break;
+                }
+            }
+            if(flag)
+                break;
+        }
+        if(!flag)
+        {
+            ui->outputData->insertPlainText(searchString+" ");
         }
     }
-    if(!flag)
-        QMessageBox::information(this,tr("Results"),tr("Not Found"));
 }

@@ -6,34 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>433</width>
-    <height>263</height>
+    <width>624</width>
+    <height>436</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QLineEdit" name="inputData">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>80</y>
-      <width>291</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="locale">
-     <locale language="Hindi" country="India"/>
-    </property>
-   </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>140</x>
-      <y>50</y>
-      <width>231</width>
-      <height>20</height>
+      <x>260</x>
+      <y>10</y>
+      <width>141</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
@@ -42,15 +29,15 @@
      </font>
     </property>
     <property name="text">
-     <string>डेटाबेस में शब्द खोज करें </string>
+     <string>String to Encode</string>
     </property>
    </widget>
    <widget class="QPushButton" name="submit">
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>140</y>
-      <width>101</width>
+      <x>270</x>
+      <y>80</y>
+      <width>111</width>
       <height>41</height>
      </rect>
     </property>
@@ -60,7 +47,63 @@
      </font>
     </property>
     <property name="text">
-     <string>जमा करें</string>
+     <string>SUBMIT</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="inputData">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>130</y>
+      <width>311</width>
+      <height>241</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="outputData">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>130</y>
+      <width>281</width>
+      <height>241</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="stringToEncode">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>40</y>
+      <width>281</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>110</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Input Cover Text</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>110</y>
+      <width>71</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Output Text</string>
     </property>
    </widget>
   </widget>
@@ -69,7 +112,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>433</width>
+     <width>624</width>
      <height>21</height>
     </rect>
    </property>
