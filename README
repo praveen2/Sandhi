@@ -1,0 +1,11 @@
+1. A text file "DB" is included in Debug Directory. It contains some hindi text lines and words.
+
+2. Compile the program preferably in debug mode and then run it. It will prompt you to enter a text(in hindi) and will tell you if it is present in the database or not.
+
+3. Aim of this program is to only read/write and hence compare hindi/sanskrit words.
+
+4. Currently file is encoded in UTF-8 without BOM (byte order mark) .,, so if u decide to change the file ,, make sure to keep the encoding.
+
+Next ToDo :: Suggest an efficient way to maintain database for our project,, right now I can only think of indexing on atmoic words(those who combined to make a composite word) 
+			which will be used for decoding and simple linear search on composite words. This way space efficiency is improved because 2nd atomic word in any sandhi viched needs to occur only once 
+			but this scheme is not good in respect of execution efficiency.
