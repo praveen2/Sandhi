@@ -59,6 +59,11 @@
       <height>241</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
    </widget>
    <widget class="QTextEdit" name="outputData">
     <property name="geometry">
@@ -68,6 +73,11 @@
       <width>281</width>
       <height>241</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
     </property>
    </widget>
    <widget class="QLineEdit" name="stringToEncode">

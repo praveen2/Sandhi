@@ -28,7 +28,7 @@ void MainWindow::changeEvent(QEvent *e)
 
 void MainWindow::on_submit_clicked()
 {
-    int i , flag = 0 ,cur_pos = 0;
+    int i , flag = 0 ,cur_pos = 0, word_present=0;
     QString stringToEncode = ui->stringToEncode->text();
     if(stringToEncode.isNull())
         return;
@@ -41,6 +41,7 @@ void MainWindow::on_submit_clicked()
     foreach (QString searchString,searchStringList )
     {
         qDebug()<<"1";
+        word_present = 0;
         file->seek(0);
         //If Cover Text is bigger than what is needed
         if(cur_pos >= stringToEncode.size())
@@ -61,11 +62,12 @@ void MainWindow::on_submit_clicked()
             {
                 //Word is composite and present in database
                 qDebug()<<"true"<<i;
+                word_present=1;
 
                 if(stringToEncode[cur_pos++] == '1')
                 {
                     for(int i=1 ; i<sandhiViched.size() ; i++)
-                        ui->outputData->insertPlainText(hindi->toUnicode(sandhiViched.at(i).toAscii())+" ");
+                        ui->outputData->insertHtml(hindi->toUnicode("<span style=\"text-decoration: underline;\">"+sandhiViched.at(i).toAscii())+" </span>");
                     //We have outputted the viched of composite word so flag this word
                     flag = 1;
                     break;
@@ -76,7 +78,10 @@ void MainWindow::on_submit_clicked()
         }
         if(!flag)
         {
-            ui->outputData->insertPlainText(searchString+" ");
+            if(word_present)
+                ui->outputData->insertHtml("<span style=\"font-weight: bold;\">" + searchString +" </span>");
+            else
+                ui->outputData->insertHtml(searchString +" ");
         }
     }
 }
