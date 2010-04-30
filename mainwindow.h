@@ -21,10 +21,12 @@ protected:
 
 private:
     Ui::MainWindow *ui;
+    QString first_output;
 
 private slots:
 
 private slots:
+    void on_submit_2_clicked();
     void on_submit_clicked();
 };
 

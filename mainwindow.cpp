@@ -67,7 +67,10 @@ void MainWindow::on_submit_clicked()
                 if(stringToEncode[cur_pos++] == '1')
                 {
                     for(int i=1 ; i<sandhiViched.size() ; i++)
+                    {
+                        first_output += ( hindi->toUnicode(sandhiViched.at(i).toAscii() + " " ));
                         ui->outputData->insertHtml(hindi->toUnicode("<span style=\"text-decoration: underline;\">"+sandhiViched.at(i).toAscii())+" </span>");
+                    }
                     //We have outputted the viched of composite word so flag this word
                     flag = 1;
                     break;
@@ -78,10 +81,21 @@ void MainWindow::on_submit_clicked()
         }
         if(!flag)
         {
+            first_output += (searchString +" ");
             if(word_present)
                 ui->outputData->insertHtml("<span style=\"font-weight: bold;\">" + searchString +" </span>");
             else
                 ui->outputData->insertHtml(searchString +" ");
         }
+    }
+}
+
+void MainWindow::on_submit_2_clicked()
+{
+    //ui->finalOutput->insertHtml(first_output);
+    for(int i=0 ; i<first_output.length() ; i++)
+    {
+        ui->finalOutput->insertPlainText(first_output.at(i));
+        ui->finalOutput->insertPlainText(" ");
     }
 }
