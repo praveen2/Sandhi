@@ -6,187 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>624</width>
-    <height>574</height>
+    <width>394</width>
+    <height>95</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralWidget">
-   <widget class="QLabel" name="label">
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="encrypt">
     <property name="geometry">
      <rect>
-      <x>450</x>
-      <y>40</y>
-      <width>141</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Primary Private Data</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="submit">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>130</y>
-      <width>191</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>14</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Encode Semantically</string>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="inputData">
-    <property name="geometry">
-     <rect>
-      <x>3</x>
-      <y>30</y>
-      <width>351</width>
-      <height>91</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="outputData">
-    <property name="geometry">
-     <rect>
-      <x>3</x>
-      <y>180</y>
-      <width>351</width>
-      <height>91</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="stringToEncode">
-    <property name="geometry">
-     <rect>
-      <x>440</x>
-      <y>70</y>
-      <width>151</width>
-      <height>20</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Input Cover Text</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>160</y>
+      <x>30</x>
+      <y>20</y>
       <width>131</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Intermediate output Text</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit">
-    <property name="geometry">
-     <rect>
-      <x>440</x>
-      <y>220</y>
-      <width>151</width>
-      <height>20</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>376</x>
-      <y>52</y>
-      <width>46</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>48</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>+</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_5">
-    <property name="geometry">
-     <rect>
-      <x>376</x>
-      <y>204</y>
-      <width>46</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>48</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>+</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_6">
-    <property name="geometry">
-     <rect>
-      <x>446</x>
-      <y>190</y>
-      <width>161</width>
       <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Secondary Private Data</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="submit_2">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>280</y>
-      <width>191</width>
-      <height>41</height>
      </rect>
     </property>
     <property name="font">
@@ -195,44 +29,34 @@
      </font>
     </property>
     <property name="text">
-     <string>Encode Syntactically</string>
+     <string>Encrypt</string>
     </property>
    </widget>
-   <widget class="QTextEdit" name="finalOutput">
+   <widget class="QPushButton" name="decrypt">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>350</y>
-      <width>601</width>
-      <height>161</height>
+      <x>240</x>
+      <y>20</y>
+      <width>121</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>12</pointsize>
+      <pointsize>14</pointsize>
      </font>
     </property>
-   </widget>
-   <widget class="QLabel" name="label_7">
-    <property name="geometry">
-     <rect>
-      <x>280</x>
-      <y>330</y>
-      <width>71</width>
-      <height>16</height>
-     </rect>
-    </property>
     <property name="text">
-     <string>Output Text</string>
+     <string>Decrypt</string>
     </property>
    </widget>
   </widget>
-  <widget class="QMenuBar" name="menuBar">
+  <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>624</width>
+     <width>394</width>
      <height>21</height>
     </rect>
    </property>
@@ -244,22 +68,13 @@
    </widget>
    <addaction name="menuFile"/>
   </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-  </widget>
-  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QStatusBar" name="statusbar"/>
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
    </property>
   </action>
  </widget>
- <layoutdefault spacing="6" margin="11"/>
  <resources/>
  <connections/>
 </ui>

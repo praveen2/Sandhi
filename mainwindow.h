@@ -5,6 +5,8 @@
 #include <QFile>
 #include <QObject>
 #include <QtGui>
+#include "ui_encode.h"
+#include "ui_decode.h"
 
 namespace Ui {
     class MainWindow;
@@ -21,13 +23,20 @@ protected:
 
 private:
     Ui::MainWindow *ui;
+    Ui_encode encodeForm;
+    Ui_decode decodeForm;
+    QDialog *encodeDialog,*decodeDialog;
     QString first_output;
 
 private slots:
 
 private slots:
-    void on_submit_2_clicked();
-    void on_submit_clicked();
+    void on_decrypt_clicked();
+    void on_encrypt_clicked();
+    void on_sec_encode_clicked();
+    void on_primary_encode_clicked();
+    void on_sec_decode_clicked();
+    //void on_primary_decode_clicked();
 };
 
 #endif // MAINWINDOW_H

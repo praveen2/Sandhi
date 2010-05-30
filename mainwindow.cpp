@@ -6,6 +6,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    encodeDialog = new QDialog(this);
+    encodeForm.setupUi(encodeDialog);
+
+    decodeDialog = new QDialog(this);
+    decodeForm.setupUi(decodeDialog);
+
+    connect(encodeForm.primary_encode_button,SIGNAL(clicked()),this,SLOT(on_primary_encode_clicked()));
+    connect(encodeForm.sec_encode_button,SIGNAL(clicked()),this,SLOT(on_sec_encode_clicked()));
+    //connect(decodeForm.primary_decode_button,SIGNAL(clicked()),this,SLOT(on_primary_decode_clicked()));
+    connect(decodeForm.sec_decode_button,SIGNAL(clicked()),this,SLOT(on_sec_decode_clicked()));
+    encodeForm.stringToEncode->insert("11000101");
 }
 
 MainWindow::~MainWindow()
@@ -26,10 +37,10 @@ void MainWindow::changeEvent(QEvent *e)
 }
 
 
-void MainWindow::on_submit_clicked()
+void MainWindow::on_primary_encode_clicked()
 {
     int i , flag = 0 ,cur_pos = 0, word_present=0;
-    QString stringToEncode = ui->stringToEncode->text();
+    QString stringToEncode = encodeForm.stringToEncode->text();
     if(stringToEncode.isNull())
         return;
 
@@ -37,7 +48,7 @@ void MainWindow::on_submit_clicked()
     QTextCodec *hindi = QTextCodec::codecForName("UTF-8");
     file->open(QIODevice::ReadWrite);
 
-    QStringList searchStringList = ui->inputData->toPlainText().split(" ",QString::SkipEmptyParts);
+    QStringList searchStringList = encodeForm.inputData->toPlainText().split(" ",QString::SkipEmptyParts);
     foreach (QString searchString,searchStringList )
     {
         qDebug()<<"1";
@@ -69,7 +80,7 @@ void MainWindow::on_submit_clicked()
                     for(int i=1 ; i<sandhiViched.size() ; i++)
                     {
                         first_output += ( hindi->toUnicode(sandhiViched.at(i).toAscii() + " " ));
-                        ui->outputData->insertHtml(hindi->toUnicode("<span style=\"text-decoration: underline;\">"+sandhiViched.at(i).toAscii())+" </span>");
+                        encodeForm.outputData->insertHtml(hindi->toUnicode("<span style=\"text-decoration: underline;\">"+sandhiViched.at(i).toAscii())+" </span>");
                     }
                     //We have outputted the viched of composite word so flag this word
                     flag = 1;
@@ -83,19 +94,79 @@ void MainWindow::on_submit_clicked()
         {
             first_output += (searchString +" ");
             if(word_present)
-                ui->outputData->insertHtml("<span style=\"font-weight: bold;\">" + searchString +" </span>");
+                encodeForm.outputData->insertHtml("<span style=\"font-weight: bold;\">" + searchString +" </span>");
             else
-                ui->outputData->insertHtml(searchString +" ");
+                encodeForm.outputData->insertHtml(searchString +" ");
         }
     }
 }
 
-void MainWindow::on_submit_2_clicked()
+void MainWindow::on_sec_encode_clicked()
 {
-    //ui->finalOutput->insertHtml(first_output);
-    for(int i=0 ; i<first_output.length() ; i++)
+    int cur_pos = 0;
+    for(int i=0 ; i<first_output.length()&&cur_pos < encodeForm.secData->text().length() ; i++)
     {
-        ui->finalOutput->insertPlainText(first_output.at(i));
-        ui->finalOutput->insertPlainText(" ");
+        qDebug()<<first_output.at(i).unicode();
+        if(first_output.at(i).unicode() == 32)
+            encodeForm.finalOutput->insertHtml("&nbsp");
+        else if(encodeForm.secData->text().at(cur_pos++) == '1')
+            encodeForm.finalOutput->insertHtml("<span style=\"font-family:slant; font-size:24pt;\">" + QString(first_output.at(i)) + "</span>");
+        else
+            encodeForm.finalOutput->insertHtml("<span style=\"font-family:Mangal; font-size:24pt;\">" + QString(first_output.at(i)) + "</span>");
     }
+}
+
+void MainWindow::on_sec_decode_clicked()
+{
+    int pos = 0, index;
+    QString encodedString = encodeForm.finalOutput->toHtml();
+    QString substring = "span style";
+    qDebug()<<encodedString;
+    while(pos < encodedString.size())
+    {
+        index = encodedString.indexOf(substring,pos);
+        //qDebug()<<index<<encodedString.at(index-2);
+
+        if(index == -1)
+            break;
+
+        qDebug()<<encodedString.at(index-2).unicode();
+
+        if(encodedString.at(index-2).unicode() == 160)
+            decodeForm.intermediateOutputData->insertPlainText(" ");
+
+        if(encodedString.at(index+26) == 's')
+        {
+            int ctr = 0;
+            while(encodedString.at(index + 51 + ctr) != '<')
+            {
+                decodeForm.intermediateOutputData->insertPlainText(encodedString.at(index + 51 + ctr++));
+                decodeForm.secDecodedString->insert("1");
+            }
+        }
+        else if(encodedString.at(index+26) == 'M')
+        {
+            int ctr = 0;
+            while(encodedString.at(index + 52 + ctr) != '<')
+            {
+                decodeForm.intermediateOutputData->insertPlainText(encodedString.at(index + 52 + ctr++));
+                decodeForm.secDecodedString->insert("0");
+            }
+        }
+
+        pos = index + 1;
+    }
+
+    //decodeForm.intermediateOutputData->insertPlainText(encodedString);
+}
+
+void MainWindow::on_encrypt_clicked()
+{
+    encodeDialog->show();
+}
+
+void MainWindow::on_decrypt_clicked()
+{
+    decodeForm.encodedData->insertHtml(encodeForm.finalOutput->toHtml());
+    decodeDialog->show();
 }
