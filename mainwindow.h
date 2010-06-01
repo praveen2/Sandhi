@@ -29,14 +29,12 @@ private:
     QString first_output;
 
 private slots:
-
-private slots:
     void on_decrypt_clicked();
     void on_encrypt_clicked();
     void on_sec_encode_clicked();
     void on_primary_encode_clicked();
     void on_sec_decode_clicked();
-    //void on_primary_decode_clicked();
+    void on_primary_decode_clicked();
 };
 
 #endif // MAINWINDOW_H
