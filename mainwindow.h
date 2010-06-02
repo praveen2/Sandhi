@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QObject>
 #include <QtGui>
+#include <QList>
 #include "ui_encode.h"
 #include "ui_decode.h"
 
@@ -27,6 +28,8 @@ private:
     Ui_decode decodeForm;
     QDialog *encodeDialog,*decodeDialog;
     QString first_output;
+    QList<int> characterListWithDanda;
+    void initializeCharacterListHavingDanda();
 
 private slots:
     void on_decrypt_clicked();

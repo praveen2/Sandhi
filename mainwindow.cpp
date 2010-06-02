@@ -17,8 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(decodeForm.primary_decode_button,SIGNAL(clicked()),this,SLOT(on_primary_decode_clicked()));
     connect(decodeForm.sec_decode_button,SIGNAL(clicked()),this,SLOT(on_sec_decode_clicked()));
     encodeForm.stringToEncode->insert("1100010");
-    encodeForm.secData->insert("001001010101010000000000001111111111111111111111111000000000000000000001111111111111111111111010101010010101010101000000000000001111111111111111111111111000000000000000000000000000000000111111111111111111111111111111111111111");
-
+    //encodeForm.secData->insert("001001010101010000000000001111111111111111111111111000000000000000000001111111111111111111111010101010010101010101000000000000001111111111111111111111111000000000000000000000000000000000111111111111111111111111111111111111111");
+    initializeCharacterListHavingDanda();
 }
 
 MainWindow::~MainWindow()
@@ -36,6 +36,20 @@ void MainWindow::changeEvent(QEvent *e)
     default:
         break;
     }
+}
+
+void MainWindow::initializeCharacterListHavingDanda()
+{
+    QFile *file = new QFile("list.txt");
+    file->open(QIODevice::ReadOnly);
+    QString fileString = file->readLine();
+    while(!fileString.isEmpty())
+    {
+        characterListWithDanda.append(fileString.toInt());
+        fileString = file->readLine();
+    }
+    for(int i=0; i<characterListWithDanda.size(); i++)
+        qDebug()<<characterListWithDanda.at(i);
 }
 
 
@@ -57,7 +71,10 @@ void MainWindow::on_primary_encode_clicked()
         file->seek(0);
         //If Cover Text is bigger than what is needed
         if(cur_pos >= stringToEncode.size())
+        {
+            qDebug()<<"Cover Text is bigger, so clipping the cover text.";
             return;
+        }
 
         i=0 , flag=0;
         while(++i)      //Note that it is infinite loop
@@ -73,7 +90,7 @@ void MainWindow::on_primary_encode_clicked()
             if(sandhiViched.at(0) == searchString.toUtf8())
             {
                 //Word is composite and present in database
-                qDebug()<<"true"<<i;
+                //qDebug()<<"true"<<i;
                 word_present=1;
 
                 if(stringToEncode[cur_pos++] == '1')
@@ -100,6 +117,11 @@ void MainWindow::on_primary_encode_clicked()
                 encodeForm.outputData->insertHtml(searchString +" ");
         }
     }
+    if(cur_pos < stringToEncode.size())
+    {
+        qDebug()<<"Cover Text is insufficient for encoding";
+        qDebug()<<"Encoded"<<stringToEncode.left(cur_pos);
+    }
 }
 
 void MainWindow::on_sec_encode_clicked()
@@ -107,13 +129,13 @@ void MainWindow::on_sec_encode_clicked()
     int cur_pos = 0;
     for(int i=0 ; i<first_output.length()&&cur_pos < encodeForm.secData->text().length() ; i++)
     {
-        //qDebug()<<first_output.at(i).unicode();
+        qDebug()<<first_output.at(i).unicode();
         if(first_output.at(i).unicode() == 32)
             encodeForm.finalOutput->insertHtml("&nbsp");
-        else if(encodeForm.secData->text().at(cur_pos++) == '1')
-            encodeForm.finalOutput->insertHtml("<span style=\"font-family:slant; font-size:14pt;\">" + QString(first_output.at(i)) + "</span>");
+        else if(characterListWithDanda.contains(first_output.at(i).unicode()) && encodeForm.secData->text().at(cur_pos++) == '1')
+            encodeForm.finalOutput->insertHtml("<span style=\"font-family:slant; font-size:24pt;\">" + QString(first_output.at(i)) + "</span>");
         else
-            encodeForm.finalOutput->insertHtml("<span style=\"font-family:Mangal; font-size:14pt;\">" + QString(first_output.at(i)) + "</span>");
+            encodeForm.finalOutput->insertHtml("<span style=\"font-family:Mangal; font-size:24pt;\">" + QString(first_output.at(i)) + "</span>");
     }
 }
 
