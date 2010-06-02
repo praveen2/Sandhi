@@ -1,11 +1,19 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+
+/******************************************************
+ ** Main Constructor. It setup the main windows' UI  **
+ ** and encrypt and decrypt forms as well. It will   **
+ ** then setup four connections of  four buttons in  **
+ ** the encrypt and decrypt form to their slots.     **
+ ******************************************************/
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     encodeDialog = new QDialog(this);
     encodeForm.setupUi(encodeDialog);
 
@@ -16,15 +24,16 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(encodeForm.sec_encode_button,SIGNAL(clicked()),this,SLOT(on_sec_encode_clicked()));
     connect(decodeForm.primary_decode_button,SIGNAL(clicked()),this,SLOT(on_primary_decode_clicked()));
     connect(decodeForm.sec_decode_button,SIGNAL(clicked()),this,SLOT(on_sec_decode_clicked()));
-    encodeForm.stringToEncode->insert("1100010");
-    //encodeForm.secData->insert("001001010101010000000000001111111111111111111111111000000000000000000001111111111111111111111010101010010101010101000000000000001111111111111111111111111000000000000000000000000000000000111111111111111111111111111111111111111");
+
     initializeCharacterListHavingDanda();
 }
+
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
 
 void MainWindow::changeEvent(QEvent *e)
 {
@@ -38,6 +47,10 @@ void MainWindow::changeEvent(QEvent *e)
     }
 }
 
+/********************************************************
+ ** This function initialize a list which contains all **
+ ** the characters who have 'danda' in their glyph.    **
+ ********************************************************/
 void MainWindow::initializeCharacterListHavingDanda()
 {
     QFile *file = new QFile("list.txt");
@@ -48,11 +61,15 @@ void MainWindow::initializeCharacterListHavingDanda()
         characterListWithDanda.append(fileString.toInt());
         fileString = file->readLine();
     }
-    for(int i=0; i<characterListWithDanda.size(); i++)
-        qDebug()<<characterListWithDanda.at(i);
 }
 
 
+/**************************************************************************************
+ ** It is a slot and instantiated on pressing primary encoding button. This function **
+ ** will read the cover text one by one word and check whether the word is present   **
+ ** in dictionary or not. If the word is present in the dictionary then if the bit to**
+ ** encode is "1" then sandhi viched is substituted, else the word is left as it is. **
+ **************************************************************************************/
 void MainWindow::on_primary_encode_clicked()
 {
     int i , flag = 0 ,cur_pos = 0, word_present=0;
@@ -84,13 +101,12 @@ void MainWindow::on_primary_encode_clicked()
             if(fileString.isEmpty())
                 break;
             fileString.chop(2);
+
             QStringList sandhiViched = fileString.split(" ",QString::SkipEmptyParts);
-            //qDebug()<<sandhiViched.at(0)<<"   "<<searchString.toUtf8();
 
             if(sandhiViched.at(0) == searchString.toUtf8())
             {
                 //Word is composite and present in database
-                //qDebug()<<"true"<<i;
                 word_present=1;
 
                 if(stringToEncode[cur_pos++] == '1')
@@ -98,8 +114,10 @@ void MainWindow::on_primary_encode_clicked()
                     for(int i=1 ; i<sandhiViched.size() ; i++)
                     {
                         first_output += ( hindi->toUnicode(sandhiViched.at(i).toAscii() + " " ));
-                        encodeForm.outputData->insertHtml(hindi->toUnicode("<span style=\"text-decoration: underline;\">"+sandhiViched.at(i).toAscii())+" </span>");
+                        encodeForm.outputData->insertHtml(hindi->toUnicode \
+                          ("<span style=\"text-decoration: underline;\">"+sandhiViched.at(i).toAscii())+" </span>");
                     }
+
                     //We have outputted the viched of composite word so flag this word
                     flag = 1;
                     break;
@@ -124,27 +142,48 @@ void MainWindow::on_primary_encode_clicked()
     }
 }
 
+/************************************************************************************
+ ** It is also a slot and instantiated on pressing secondary encoding button. This **
+ ** function will read the previous encoded text character by character and check  **
+ ** whether the character is present in the list character list with danda. If the **
+ ** character is present in the list and the bit to encode is "1" then danda in    **
+ ** alphabet is cut using the slant font else character is left as it is .         **
+ ************************************************************************************/
 void MainWindow::on_sec_encode_clicked()
 {
     int cur_pos = 0;
     for(int i=0 ; i<first_output.length()&&cur_pos < encodeForm.secData->text().length() ; i++)
     {
-        qDebug()<<first_output.at(i).unicode();
+        //qDebug()<<first_output.at(i).unicode();
         if(first_output.at(i).unicode() == 32)
             encodeForm.finalOutput->insertHtml("&nbsp");
-        else if(characterListWithDanda.contains(first_output.at(i).unicode()) && encodeForm.secData->text().at(cur_pos++) == '1')
-            encodeForm.finalOutput->insertHtml("<span style=\"font-family:slant; font-size:24pt;\">" + QString(first_output.at(i)) + "</span>");
+
+        else if(characterListWithDanda.contains \
+              (first_output.at(i).unicode()) && encodeForm.secData->text().at(cur_pos++) == '1')
+
+            encodeForm.finalOutput->insertHtml \
+                 ("<span style=\"font-family:slant; font-size:24pt;\">" + QString(first_output.at(i)) + "</span>");
+
         else
-            encodeForm.finalOutput->insertHtml("<span style=\"font-family:Mangal; font-size:24pt;\">" + QString(first_output.at(i)) + "</span>");
+            encodeForm.finalOutput->insertHtml \
+                 ("<span style=\"font-family:Mangal; font-size:24pt;\">" + QString(first_output.at(i)) + "</span>");
     }
 }
 
+
+/*************************************************************************************
+ ** This function does the reverse of on_sec_encode_clicked. This function find out **
+ ** whether the character is displayed in slant font or normal font. This function  **
+ ** and on_sec_encode_clicked performs the simulation of actually cutting the pixels**
+ ** from the 'danda' and then on reciever side finding out which alphabet has its   **
+ ** danda cut slant wise at bottom using image processing in MATLAB                 **
+ *************************************************************************************/
 void MainWindow::on_sec_decode_clicked()
 {
     int pos = 0, index;
     QString encodedString = encodeForm.finalOutput->toHtml();
     QString substring = "span style";
-    //qDebug()<<encodedString;
+    qDebug()<<encodedString;
     while(pos < encodedString.size())
     {
         index = encodedString.indexOf(substring,pos);
@@ -172,8 +211,10 @@ void MainWindow::on_sec_decode_clicked()
             int ctr = 0;
             while(encodedString.at(index + 52 + ctr) != '<')
             {
-                decodeForm.intermediateOutputData->insertPlainText(encodedString.at(index + 52 + ctr++));
-                decodeForm.secDecodedString->insert("0");
+                decodeForm.intermediateOutputData->insertPlainText(encodedString.at(index + 52 + ctr));
+                //if the character has 'danda' then only output as '0' else character is unencodable
+                if(characterListWithDanda.contains(encodedString.at(index + 52 + ctr++).unicode()))
+                    decodeForm.secDecodedString->insert("0");
             }
         }
 
@@ -183,9 +224,19 @@ void MainWindow::on_sec_decode_clicked()
     //decodeForm.intermediateOutputData->insertPlainText(encodedString);
 }
 
+
+/***************************************************************************
+ ** This function performs all operations opposite to that of on_primary_ **
+ ** encode_clicked(). It will check word by word whether it is present in **
+ ** dictionary in composite word fields, if it is then it indicates that  **
+ ** the word has been encoded with bit "0". Else it will check again the  **
+ ** dictionary if the word and next consecutive word(s) are part of a     **
+ ** sandhi viched. If yes then the bit encoded is "1" and the funtion will**
+ ** output the composite word in cover text box and "1" as secret data    **
+ ***************************************************************************/
 void MainWindow::on_primary_decode_clicked()
 {
-    int i , flag = 0 , flagToBreak , flagToContinue , cur_pos = 0, word_present=0, tempIndex;
+    int i , flagToBreak , flagToContinue , tempIndex;
 
     QFile *file = new QFile("DB");
     QTextCodec *hindi = QTextCodec::codecForName("UTF-8");
@@ -197,7 +248,6 @@ void MainWindow::on_primary_decode_clicked()
     {
         QString searchString = searchStringList.at(index);
 
-        word_present = 0;
         file->seek(0);
         i=0; flagToBreak = 0;
 
@@ -228,11 +278,11 @@ void MainWindow::on_primary_decode_clicked()
                 {
                     if(sandhiViched[ctr] != searchStringList[++index].toUtf8())
                     {
-//                        //the word is not part of any sandhi viched so write all the currently matched parts as it is to cover text
-//                        for(int ctr2=1; ctr2 < ctr; ctr2++)
-//                            decodeForm.coverText->insertPlainText(hindi->toUnicode(sandhiViched.at(ctr2).toAscii() + " "));
+                        //the word is not part of currently selected sandhi
                         //restore the value of index(which is index of main intermediate output text)
-                        index = tempIndex;    //1 because ctr is already ahead by 1(composite word at 0th location)
+                        index = tempIndex;
+                        //Flag to indicate that more search is needed as many composite words
+                        //can have same first atomic word.
                         flagToContinue = 1;
                     }
                 }
@@ -257,11 +307,18 @@ void MainWindow::on_primary_decode_clicked()
     }
 }
 
+
+/*************************************************************
+ ** Initiates the encoding process and displays encode form **
+ *************************************************************/
 void MainWindow::on_encrypt_clicked()
 {
     encodeDialog->show();
 }
 
+/*************************************************************
+ ** Initiates the decoding process and displays decode form **
+ *************************************************************/
 void MainWindow::on_decrypt_clicked()
 {
     decodeForm.encodedData->insertHtml(encodeForm.finalOutput->toHtml());
