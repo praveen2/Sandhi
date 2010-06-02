@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(decodeForm.sec_decode_button,SIGNAL(clicked()),this,SLOT(on_sec_decode_clicked()));
     encodeForm.stringToEncode->insert("1100010");
     encodeForm.secData->insert("001001010101010000000000001111111111111111111111111000000000000000000001111111111111111111111010101010010101010101000000000000001111111111111111111111111000000000000000000000000000000000111111111111111111111111111111111111111");
+
 }
 
 MainWindow::~MainWindow()
@@ -110,9 +111,9 @@ void MainWindow::on_sec_encode_clicked()
         if(first_output.at(i).unicode() == 32)
             encodeForm.finalOutput->insertHtml("&nbsp");
         else if(encodeForm.secData->text().at(cur_pos++) == '1')
-            encodeForm.finalOutput->insertHtml("<span style=\"font-family:slant; font-size:10pt;\">" + QString(first_output.at(i)) + "</span>");
+            encodeForm.finalOutput->insertHtml("<span style=\"font-family:slant; font-size:14pt;\">" + QString(first_output.at(i)) + "</span>");
         else
-            encodeForm.finalOutput->insertHtml("<span style=\"font-family:Mangal; font-size:10pt;\">" + QString(first_output.at(i)) + "</span>");
+            encodeForm.finalOutput->insertHtml("<span style=\"font-family:Mangal; font-size:14pt;\">" + QString(first_output.at(i)) + "</span>");
     }
 }
 
